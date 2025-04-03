@@ -1,0 +1,22 @@
+<mat-dialog-content>
+    <h4>Add a book</h4>
+    <form (ngSubmit)="onAdd(title.value, author.value, genre.value, cover.value)">
+        <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput #title>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Author</mat-label>
+            <input matInput #author>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Genre</mat-label>
+            <input matInput #genre>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Cover</mat-label>
+            <input matInput #cover type="url">
+        </mat-form-field>
+        <button mat-fab extended="" type="submit"><mat-icon>add</mat-icon>Add</button>
+    </form>
+</mat-dialog-content>

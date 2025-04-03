@@ -1,0 +1,35 @@
+.books-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+img {
+    width: 200px;
+    height: 300px;
+    max-height: 300px;
+}
+
+mat-card {
+    margin: 20px;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+mat-card-title {
+    overflow: wrap;
+}
+
+#add-book-button {
+    margin: 10px;
+}
+
+mat-card-actions {
+    margin-top: auto;
+}
+
+mat-card-actions > button {
+    margin-left: 5px;
+}

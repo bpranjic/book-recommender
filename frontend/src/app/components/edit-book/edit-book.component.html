@@ -1,0 +1,24 @@
+<mat-dialog-content>
+    <h4>Edit Book</h4>
+    <form (ngSubmit)="onEdit()">
+        <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput [(ngModel)]="book.title" name="title" required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Author</mat-label>
+            <input matInput [(ngModel)]="book.author" name="author" required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Genre</mat-label>
+            <input matInput [(ngModel)]="book.genre" name="genre" required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Cover</mat-label>
+            <input matInput type="url" [(ngModel)]="book.cover" name="cover" required>
+        </mat-form-field>
+        <button mat-fab extended="" type="submit">
+            <mat-icon>edit</mat-icon>Edit
+        </button>
+    </form>
+</mat-dialog-content>

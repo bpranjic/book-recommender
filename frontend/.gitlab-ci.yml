@@ -1,0 +1,71 @@
+stages:
+  - build
+  - test
+  - preview
+  - production
+
+variables:
+  CI_DEBUG_TRACE: "false"
+  VERCEL_ORG_ID: "$VERCEL_ORG_ID"
+  VERCEL_PROJECT_ID: "$VERCEL_PROJECT_ID"
+  VERCEL_TOKEN: "$VERCEL_TOKEN"
+
+cache:
+  paths:
+    - node_modules/
+
+.build_template: &build_template
+  image: node:20
+  script:
+    - npm install -g @angular/cli
+    - npm install
+    - ng update
+    - npm update
+    - ng build --configuration $NODE_ENV
+  artifacts:
+    paths:
+      - dist/
+
+build:
+  stage: build
+  parallel:
+    matrix:
+      - NODE_ENV: [development, production]
+  <<: *build_template
+
+test:
+  image: node:20-bullseye
+  stage: test
+  script:
+    - apt-get update && apt-get install -y wget
+    - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-chrome-keyring.gpg
+    - echo 'deb [signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
+    - apt-get update && apt-get install -y google-chrome-stable
+    - export CHROME_BIN="/usr/bin/google-chrome"
+    - npm install -g @angular/cli
+    - ng test --no-watch --no-progress
+  artifacts:
+    paths:
+      - dist/
+
+deploy_preview:
+  stage: preview
+  image: node:20
+  except:
+    - main
+  script:
+    - npm install --global vercel
+    - vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+    - vercel build --token=$VERCEL_TOKEN
+    - vercel deploy --prebuilt  --token=$VERCEL_TOKEN
+
+deploy_production:
+  stage: production
+  image: node:20
+  only:
+    - main
+  script:
+    - npm install --global vercel
+    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+    - vercel build --prod --token=$VERCEL_TOKEN
+    - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN

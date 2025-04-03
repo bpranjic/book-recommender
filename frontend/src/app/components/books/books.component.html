@@ -1,0 +1,74 @@
+<mat-tab-group>
+    <mat-tab label="All Books">
+        <button mat-fab extended="" id="add-book-button" (click)="openAddBookDialog()"><mat-icon>add</mat-icon>Add
+            Book</button>
+        <div class="books-container">
+            @for (book of allBooks; track book.author){
+            <mat-card class="book-card">
+                <img mat-card-image [src]="book.cover" [alt]="book.title">
+                <mat-card-header>
+                    <mat-card-title>{{ book.title }}</mat-card-title>
+                    <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>{{ book.genre }}</p>
+                </mat-card-content>
+                @if (currentUser() !== null && currentUser()?.name !== "admin") {
+                <mat-card-actions>
+                    <button mat-mini-fab (click)="addBookToUser(book.id)"><mat-icon>add</mat-icon></button>
+                </mat-card-actions>
+                } @else if (currentUser()?.name === "admin") {
+                <mat-card-actions>
+                    <button mat-mini-fab (click)="deleteBook(book)"><mat-icon>delete</mat-icon></button>
+                    <button mat-mini-fab (click)="editBook(book)"><mat-icon>edit</mat-icon></button>
+                </mat-card-actions>
+                }
+            </mat-card>
+            }
+        </div>
+    </mat-tab>
+    <mat-tab label="My Books">
+        @if (currentUser() !== null) {
+        <div class="books-container">
+            @for (book of myBooks; track book.author){
+            <mat-card class="book-card">
+                <img mat-card-image [src]="book.cover" [alt]="book.title">
+                <mat-card-header>
+                    <mat-card-title>{{ book.title }}</mat-card-title>
+                    <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>{{ book.genre }}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-mini-fab (click)="removeBook(book.id)"><mat-icon>remove</mat-icon></button>
+                </mat-card-actions>
+            </mat-card>
+            }
+        </div> } @else {
+        <h2>Log in to see your books.</h2>
+        }
+    </mat-tab>
+    <mat-tab label="Book recommendations">
+        @if (currentUser() !== null) {
+        <div class="books-container">
+            @for (book of recommendations; track book.author){
+            <mat-card class="book-card">
+                <img mat-card-image [src]="book.cover" [alt]="book.title">
+                <mat-card-header>
+                    <mat-card-title>{{ book.title }}</mat-card-title>
+                    <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>{{ book.genre }}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-mini-fab><mat-icon>edit</mat-icon></button>
+                </mat-card-actions>
+            </mat-card>
+            }
+        </div> } @else {
+        <h2>Log in to see your book recommendations.</h2>
+        }
+    </mat-tab>
+</mat-tab-group>

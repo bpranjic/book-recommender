@@ -1,0 +1,17 @@
+[package]
+name = "book-recommender-backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.97"
+argon2 = "0.5.3"
+futures = "0.3.31"
+neo4rs = "0.8.0"
+rocket = { version = "0.5.0", features = ["json"] }
+serde = "1.0.218"
+shuttle-rocket = "0.52.0"
+shuttle-runtime = { version = "0.52.0", features = ["setup-otel-exporter"] }
+shuttle-shared-db = { version = "0.52.0", features = ["postgres", "sqlx"] }
+sqlx = "0.8.3"
+tracing = "0.1.41"

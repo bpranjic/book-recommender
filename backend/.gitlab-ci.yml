@@ -1,0 +1,66 @@
+stages:
+  - check         
+  - build
+  - test
+  - preview
+  - production
+
+variables:
+  CI_DEBUG_TRACE: "false"
+  SHUTTLE_API_KEY: "$SHUTTLE_API_KEY"
+  PREVIEW_PROJECT_ID: "$PREVIEW_PROJECT_ID"
+  PROD_PROJECT_ID: "$PROD_PROJECT_ID"
+
+cache:
+  paths:
+    - target/
+
+fmt_check:
+  stage: check
+  image: rust
+  script:
+    - rustup component add rustfmt
+    - cargo fmt --check
+
+audit_check:
+  stage: check
+  image: rust
+  script:
+    - cargo install cargo-audit
+    - cargo audit
+  allow_failure: true
+
+build:
+  stage: build
+  image: rust
+  script:
+    - export DB_CONNECTION_STRING=$DB_CONNECTION_STRING
+    - cargo build
+  artifacts:
+    paths:
+      - target/
+
+test:
+  stage: test
+  image: rust
+  script:
+    - export DB_CONNECTION_STRING=$DB_CONNECTION_STRING
+    - cargo test
+
+deploy_preview:
+  stage: preview
+  image: rust
+  only:
+    - develop
+  script:
+    - cargo install cargo-shuttle
+    - shuttle deploy --id $PREVIEW_PROJECT_ID
+
+deploy_production:
+  stage: production
+  image: rust
+  only:
+    - main
+  script:
+    - cargo install cargo-shuttle
+    - shuttle deploy --id $PROD_PROJECT_ID
